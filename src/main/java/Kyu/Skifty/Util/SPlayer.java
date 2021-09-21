@@ -3,6 +3,7 @@ package Kyu.Skifty.Util;
 import Kyu.Skifty.Language.LangManager;
 import Kyu.Skifty.Language.Language;
 import Kyu.Skifty.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import java.io.File;
@@ -65,6 +66,13 @@ public class SPlayer {
     public static class SPManager {
 
         private static Map<Player, SPlayer> players = new HashMap<>();
+
+        public static void reloadPlayers() {
+            players.clear();
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                new SPlayer(p);
+            }
+        }
 
         public static void removePlayer(Player p) {
             players.remove(p);

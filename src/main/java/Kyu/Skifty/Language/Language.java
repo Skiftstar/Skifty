@@ -26,7 +26,6 @@ public class Language {
         for (String section : config.getKeys(false)) {
             for (String messageID : config.getConfigurationSection(section).getKeys(false)) {
                 messages.put(messageID, config.getString(section + "." + messageID));
-                Util.log("test");
             }
         }
     }

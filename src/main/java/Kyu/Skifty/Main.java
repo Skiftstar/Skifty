@@ -3,6 +3,7 @@ package Kyu.Skifty;
 import Kyu.Skifty.Essentials.JoinLeaveListener;
 import Kyu.Skifty.Language.LangManager;
 import Kyu.Skifty.Language.SetLangCMD;
+import Kyu.Skifty.Util.SPlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -21,6 +22,9 @@ public final class Main extends JavaPlugin {
 
 
         setupPlayerConfFolder();
+        //Incase plugin gets reloaded
+        SPlayer.SPManager.reloadPlayers();
+
         setupLang();
         setupEssentials();
     }
