@@ -1,0 +1,6 @@
+ErrorMessages:
+  NotEnoughArgs: "&cNot enough arguments!"
+  NoSuchLanguage: "&cThis Language File does not exist!"
+
+SuccessMessages:
+  LanguageChanged: "&aSuccessfully changed language to &b%p!"

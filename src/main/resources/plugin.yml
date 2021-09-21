@@ -1,0 +1,9 @@
+name: Skifty
+version: '${project.version}'
+main: Kyu.Skifty.Main
+api-version: 1.17
+
+commands:
+  language:
+    aliases: [lang, setlang]
+    description: Allows the player to change their language
