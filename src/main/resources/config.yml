@@ -1,0 +1,14 @@
+Permissions:
+  enabled: true
+  #How the Group and user data is stored
+  #Possible values:
+  #YML - Stores in a local .yml file
+  #SQLite - Stores in a local Database
+  #MySQL - Stores in a MySQL Database
+  saveType: YML
+  #Only Relevant if above is set to MySQL
+  MySQL:
+    address: 127.0.0.1
+    user: 'root'
+    password: 'password'
+    database: 'skifty-perms'

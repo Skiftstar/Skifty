@@ -57,11 +57,9 @@ public class SPlayer {
         this.lang = lang;
     }
 
-
-
-
-
-
+    public Language getLang() {
+        return lang;
+    }
 
     public static class SPManager {
 

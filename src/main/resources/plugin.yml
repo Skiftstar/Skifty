@@ -7,3 +7,6 @@ commands:
   language:
     aliases: [lang, setlang]
     description: Allows the player to change their language
+  perm:
+    aliases: [permissions, p]
+    description: Access to all the permissions commands

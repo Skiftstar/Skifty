@@ -1,6 +1,8 @@
 ErrorMessages:
   NotEnoughArgs: "&cNot enough arguments!"
   NoSuchLanguage: "&cThis Language File does not exist!"
+  GroupAlreadyExists: "&cThis group already exists!"
 
 SuccessMessages:
   LanguageChanged: "&aSuccessfully changed language to &b%p!"
+  GroupCreated: "&aSuccessfully created Group &b%p!"

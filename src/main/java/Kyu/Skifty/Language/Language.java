@@ -37,4 +37,12 @@ public class Language {
     public String getName() {
         return name;
     }
+
+    public String getFMessage(String messageID, String... filler) {
+        String message = messages.get(messageID);
+        for (String s2 : filler) {
+            message = message.replaceFirst("%p", s2);
+        }
+        return Util.color(message);
+    }
 }
