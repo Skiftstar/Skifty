@@ -25,6 +25,10 @@ public class Group {
         this.name = name;
     }
 
+    public void setPermission(String permission, boolean value) {
+        perms.put(permission, value);
+    }
+
     private void loadFromYML() {
         File file = new File(Main.getInstance().getDataFolder() + "/groups", name + ".yml");
         YamlConfiguration conf = YamlConfiguration.loadConfiguration(file);
@@ -60,7 +64,7 @@ public class Group {
 
     public static class GroupManager {
 
-        private static List<Group> groups = new ArrayList<>();
+        private static Map<String, Group> groups = new HashMap<>();
         private static SaveType saveType;
 
         public static void loadGroups() {
@@ -73,6 +77,10 @@ public class Group {
                     }
                     break;
             }
+        }
+
+        public static Group getGroup(String name) {
+            return groups.get(name.toLowerCase());
         }
 
         public static Group createGroup(String groupName) {
@@ -110,7 +118,7 @@ public class Group {
         }
 
         public static boolean exists(String name) {
-            for (Group group : groups) {
+            for (Group group : groups.values()) {
                 if (group.getName().equalsIgnoreCase(name)) return true;
             }
             return false;

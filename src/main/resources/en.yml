@@ -2,6 +2,8 @@ ErrorMessages:
   NotEnoughArgs: "&cNot enough arguments!"
   NoSuchLanguage: "&cThis Language File does not exist!"
   GroupAlreadyExists: "&cThis group already exists!"
+  NoSuchGroup: "&cThis group doesn't exist!"
+  NotAValidValue: "&cThe following value is not valid: &4%p!"
 
 SuccessMessages:
   LanguageChanged: "&aSuccessfully changed language to &b%p!"
