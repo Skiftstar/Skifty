@@ -18,6 +18,7 @@ public final class Main extends JavaPlugin {
 
     public static File playerConfFolder;
     private static Main instance;
+    public boolean permsEnabled = false;
 
     @Override
     public void onEnable() {
@@ -35,16 +36,16 @@ public final class Main extends JavaPlugin {
         setupPlayerConfFolder();
         setupPermissions();
         //Incase plugin gets reloaded
-        SPlayer.SPManager.reloadPlayers();
-
         setupLang();
         setupEssentials();
+        SPlayer.SPManager.reloadPlayers();
     }
 
     private void setupPermissions() {
         if (!getConfig().getBoolean("Permissions.enabled")) {
             return;
         }
+        permsEnabled = true;
         SaveType saveType = SaveType.valueOf(getConfig().getString("Permissions.saveType"));
         if (saveType == null) {
             saveType = SaveType.YML;
@@ -86,7 +87,8 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        SPlayer.SPManager.savePlayerData();
+        Group.GroupManager.saveGroups();
     }
 
 

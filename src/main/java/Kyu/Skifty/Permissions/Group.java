@@ -1,12 +1,14 @@
 package Kyu.Skifty.Permissions;
 
 import Kyu.Skifty.Main;
+import Kyu.Skifty.Util.SPlayer;
 import Kyu.Skifty.Util.SaveType;
 import Kyu.Skifty.Util.Util;
 import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.yaml.snakeyaml.Yaml;
 
+import java.awt.peer.ScrollPanePeer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,13 +22,36 @@ public class Group {
     private int weight = 0;
     private List<Group> childs = new ArrayList<>();
     private Map<String, Boolean> perms = new HashMap<>();
+    private List<SPlayer> members = new ArrayList<>();
 
     public Group(String name) {
         this.name = name;
     }
 
     public void setPermission(String permission, boolean value) {
-        perms.put(permission, value);
+        perms.put(permission.toLowerCase(), value);
+        for (SPlayer p : members) {
+            p.updatePermissions();
+        }
+    }
+
+    public boolean isPermSet(String permission) {
+        return perms.containsKey(permission.toLowerCase());
+    }
+
+    public void unsetPerm(String permission) {
+        perms.remove(permission.toLowerCase());
+        for (SPlayer p : members) {
+            p.updatePermissions();
+        }
+    }
+
+    public void save() {
+        switch (GroupManager.saveType) {
+            case YML:
+                saveToYML();
+                break;
+        }
     }
 
     private void loadFromYML() {
@@ -42,12 +67,30 @@ public class Group {
             return;
         }
         conf.getConfigurationSection("permissions").getKeys(false).forEach(s -> {
-            perms.put(s, conf.getBoolean("permissions." + s));
+            perms.put(s.replace("|", "."), conf.getBoolean("permissions." + s));
         });
     }
 
-    private void saveToYML() {
 
+    private void saveToYML() {
+        File file = new File(Main.getInstance().getDataFolder() + "/groups", name + ".yml");
+        YamlConfiguration conf = YamlConfiguration.loadConfiguration(file);
+        if (prefix != null) {
+            conf.set("prefix", prefix);
+        }
+        if (suffix != null) {
+            conf.set("suffix", suffix);
+        }
+        conf.set("weight", weight);
+        conf.set("permissions", null);
+        for (String perm : perms.keySet()) {
+            conf.set("permissions." + perm.replace(".", "|"), perms.get(perm));
+        }
+        try {
+            conf.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadFromMySQL() {
@@ -62,18 +105,45 @@ public class Group {
         return name;
     }
 
+    public Map<String, Boolean> getPerms() {
+        return perms;
+    }
+
+    public void addMember(SPlayer p) {
+        members.add(p);
+    }
+
+    public void removeMember(SPlayer p) {
+        members.remove(p);
+    }
+
     public static class GroupManager {
 
         private static Map<String, Group> groups = new HashMap<>();
         private static SaveType saveType;
 
+        public static void saveGroups() {
+            for (Group g : groups.values()) {
+                g.save();
+            }
+        }
+
         public static void loadGroups() {
             switch (saveType) {
                 case YML:
                     File groupsFolder = new File(Main.getInstance().getDataFolder() + "/groups");
+                    File defGroup = new File(groupsFolder, "default.yml");
+                    if (!defGroup.exists()) {
+                        try {
+                            defGroup.createNewFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     for (File file : groupsFolder.listFiles()) {
                         Group group = new Group(file.getName().split(".yml")[0]);
                         group.loadFromYML();
+                        groups.put(group.getName(), group);
                     }
                     break;
             }
@@ -90,6 +160,7 @@ public class Group {
                     createYMLFile(groupName);
                     break;
             }
+            groups.put(group.getName(), group);
             return group;
         }
 

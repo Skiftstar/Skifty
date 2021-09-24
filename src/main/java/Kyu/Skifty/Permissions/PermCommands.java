@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Map;
 
 public class PermCommands implements CommandExecutor {
 
@@ -34,7 +35,11 @@ public class PermCommands implements CommandExecutor {
             return false;
         }
         if (args[0].equalsIgnoreCase("group")) {
-            handleGroupCommands(Arrays.copyOfRange(args, 1, args.length - 1), lang, sender);
+            if (args.length < 3) {
+                sender.sendMessage(lang.getFMessage("NotEnoughArgs"));
+                return false;
+            }
+            handleGroupCommands(Arrays.copyOfRange(args, 1, args.length), lang, sender);
             return true;
         }
         else if (args[0].equalsIgnoreCase("creategroup")) {
@@ -48,7 +53,7 @@ public class PermCommands implements CommandExecutor {
                 return false;
             }
             Group.GroupManager.createGroup(groupName);
-            sender.sendMessage(lang.getFMessage("GroupCreated", groupName));
+            sender.sendMessage(lang.getFMessage("GroupCreated", new String[]{"%p", groupName}));
             return true;
         }
 
@@ -56,10 +61,7 @@ public class PermCommands implements CommandExecutor {
     }
 
     private void handleGroupCommands(String[] args, Language lang, CommandSender sender) {
-        if (args.length < 2) {
-            sender.sendMessage(lang.getFMessage("NotEnoughArgs"));
-            return;
-        }
+        System.out.println(Arrays.toString(args));
         String groupName = args[0];
         if (!Group.GroupManager.exists(groupName)) {
             sender.sendMessage(lang.getFMessage("NoSuchGroup"));
@@ -67,27 +69,61 @@ public class PermCommands implements CommandExecutor {
         }
         Group group = Group.GroupManager.getGroup(groupName);
         if (args[1].equalsIgnoreCase("perm")) {
-            handleGroupPerms(Arrays.copyOfRange(args, 2, args.length - 1), lang, sender, group);
+            if (args.length < 3) {
+                sender.sendMessage(lang.getFMessage("NotEnoughArgs"));
+                return;
+            }
+            handleGroupPerms(Arrays.copyOfRange(args, 2, args.length), lang, sender, group);
         }
     }
 
+    private String formatMessage(Group g, Language lang) {
+        StringBuilder header = new StringBuilder(lang.getFMessage("permGroupInfo", new String[]{"%name", g.getName()}));
+        Map<String, Boolean> perms = g.getPerms();
+        for (String s : perms.keySet()) {
+            header.append("\n");
+            header.append(lang.getFMessage("permListTemplate", new String[]{"%perm", s}, new String[]{"%val", ""+perms.get(s)}));
+        }
+        return header.toString();
+    }
+
     private void handleGroupPerms(String[] args, Language lang, CommandSender sender, Group group) {
+        if (args[0].equalsIgnoreCase("info")) {
+            sender.sendMessage(formatMessage(group, lang));
+            return;
+        }
+
         if (args.length < 2) {
             sender.sendMessage(lang.getFMessage("NotEnoughArgs"));
             return;
         }
-        String permission = args[1];
-        boolean value = true;
 
+        boolean value = true;
+        String permission = args[1];
         if (args[0].equalsIgnoreCase("set")) {
+            if (group.isPermSet(permission)) {
+                sender.sendMessage(lang.getFMessage("PermAlreadySet"));
+                return;
+            }
             if (args.length >= 3) {
                 if (!args[2].equalsIgnoreCase("false")) {
-                    sender.sendMessage(lang.getFMessage("NotAValidValue", args[2]));
+                    sender.sendMessage(lang.getFMessage("NotAValidValue", new String[]{"%p", args[2]}));
                     return;
                 }
                 value = false;
             }
             group.setPermission(permission, value);
+            sender.sendMessage(lang.getFMessage("PermSetGroup", new String[]{"%perm", permission}, new String[]{"%val", Boolean.toString(value)}, new String[]{"%group", group.getName()}));
+            return;
+        }
+        if (args[0].equalsIgnoreCase("unset")) {
+            if (!group.isPermSet(permission)) {
+                sender.sendMessage(lang.getFMessage("PermNotSet"));
+                return;
+            }
+            group.unsetPerm(permission);
+            sender.sendMessage(lang.getFMessage("PermUnsetGroup", new String[]{"%perm", permission}, new String[]{"%group", group.getName()}));
+            return;
         }
 
     }

@@ -4,7 +4,15 @@ ErrorMessages:
   GroupAlreadyExists: "&cThis group already exists!"
   NoSuchGroup: "&cThis group doesn't exist!"
   NotAValidValue: "&cThe following value is not valid: &4%p!"
+  PermNotSet: "&cThis permission is not set for this group!"
+  PermAlreadySet: "&cThis permissions is already set for this group!"
 
 SuccessMessages:
   LanguageChanged: "&aSuccessfully changed language to &b%p!"
   GroupCreated: "&aSuccessfully created Group &b%p!"
+  PermUnsetGroup: "&aPermission &b%perm &asuccessfully unset for group &b%group!"
+  PermSetGroup: "&aPermission &b%perm &asuccessfully set to &b%val &afor group &b%group!"
+
+PermissionsCommand:
+  permGroupInfo: "&aPermissions for group &b%name:"
+  permListTemplate: "&a- %perm: %val"

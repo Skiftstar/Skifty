@@ -38,10 +38,10 @@ public class Language {
         return name;
     }
 
-    public String getFMessage(String messageID, String... filler) {
+    public String getFMessage(String messageID, String[]... filler) {
         String message = messages.get(messageID);
-        for (String s2 : filler) {
-            message = message.replaceFirst("%p", s2);
+        for (String[] s2 : filler) {
+            message = message.replaceFirst(s2[0], s2[1]);
         }
         return Util.color(message);
     }

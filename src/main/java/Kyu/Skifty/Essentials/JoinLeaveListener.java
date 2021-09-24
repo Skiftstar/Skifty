@@ -23,6 +23,7 @@ public class JoinLeaveListener implements Listener {
     @EventHandler
     private void onLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
+        SPlayer.SPManager.getPlayer(p).save();
         SPlayer.SPManager.removePlayer(p);
     }
 }
