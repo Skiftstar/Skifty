@@ -3,13 +3,14 @@ ErrorMessages:
   NoSuchLanguage: "&cThis Language File does not exist!"
   GroupAlreadyExists: "&cThis group already exists!"
   NoSuchGroup: "&cThis group doesn't exist!"
-  NotAValidValue: "&cThe following value is not valid: &4%p!"
+  NotAValidValue: "&cThe following value is not valid: &4%val!"
   PermNotSet: "&cThis permission is not set for this group!"
   PermAlreadySet: "&cThis permissions is already set for this group!"
+  PlayerNotOnline: "&cThis player isn't online!"
 
 SuccessMessages:
-  LanguageChanged: "&aSuccessfully changed language to &b%p!"
-  GroupCreated: "&aSuccessfully created Group &b%p!"
+  LanguageChanged: "&aSuccessfully changed language to &b%lan!"
+  GroupCreated: "&aSuccessfully created Group &b%group!"
   PermUnsetGroup: "&aPermission &b%perm &asuccessfully unset for group &b%group!"
   PermSetGroup: "&aPermission &b%perm &asuccessfully set to &b%val &afor group &b%group!"
 

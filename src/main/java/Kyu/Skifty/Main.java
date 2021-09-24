@@ -14,6 +14,14 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 
+/*
+Main Class of the Skifty Plugin
+This plugin is designed to be an all-in-one Server Plugin
+It's highly customizable with the ability to turn off modules you don't need and every important value accessible in the config
+Author: Kyu
+ */
+
+
 public final class Main extends JavaPlugin {
 
     public static File playerConfFolder;
@@ -23,6 +31,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        //Default config is created this way so that comments are saved as well
         File defConf = new File(getDataFolder(), "config.yml");
         if (!defConf.exists()) {
             try {
@@ -32,12 +41,11 @@ public final class Main extends JavaPlugin {
             }
         }
 
-
         setupPlayerConfFolder();
         setupPermissions();
-        //Incase plugin gets reloaded
         setupLang();
         setupEssentials();
+        //Incase plugin gets reloaded
         SPlayer.SPManager.reloadPlayers();
     }
 
@@ -46,12 +54,14 @@ public final class Main extends JavaPlugin {
             return;
         }
         permsEnabled = true;
+        //saveType currently only affects groups, set to YML by default
         SaveType saveType = SaveType.valueOf(getConfig().getString("Permissions.saveType"));
         if (saveType == null) {
             saveType = SaveType.YML;
             getConfig().set("Permissions.saveType", "YML");
         }
         if (saveType.equals(SaveType.YML)) {
+            //creates the folder where all the group yml files are located
             File groupsFolder = new File(getDataFolder() + "/groups");
             if (!groupsFolder.exists()) {
                 groupsFolder.mkdir();
@@ -62,24 +72,28 @@ public final class Main extends JavaPlugin {
         new PermCommands(this);
     }
 
+    //Creates the folder where all the player yml files are located
     private void setupPlayerConfFolder() {
         playerConfFolder = new File(getDataFolder() + "/players");
         if (!playerConfFolder.exists()) playerConfFolder.mkdir();
     }
 
+    //Loads in default language from config and sets up language system
     private void setupLang() {
         String defaultLang = getConfig().getString("Default Language");
         LangManager.setup(defaultLang, this);
         new SetLangCMD(this);
     }
 
+    //Sets up stuff from the Essentials Module
+    private void setupEssentials() {
+        new JoinLeaveListener(this);
+    }
+
     public Reader getTextRessource(String s) {
         return getTextResource(s);
     }
 
-    private void setupEssentials() {
-        new JoinLeaveListener(this);
-    }
 
     public static Main getInstance() {
         return instance;

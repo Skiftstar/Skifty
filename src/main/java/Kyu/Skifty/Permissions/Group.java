@@ -16,11 +16,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/*
+Class handles the Groups of the permission System
+ */
+
 public class Group {
 
     private String name, prefix = null, suffix = null;
     private int weight = 0;
-    private List<Group> childs = new ArrayList<>();
+    //Groups it inherits permissions from
+    //TODO: Add inheriting of permissions
+    private List<Group> parents = new ArrayList<>();
     private Map<String, Boolean> perms = new HashMap<>();
     private List<SPlayer> members = new ArrayList<>();
 
@@ -28,12 +34,11 @@ public class Group {
         this.name = name;
     }
 
-    public void setPermission(String permission, boolean value) {
-        perms.put(permission.toLowerCase(), value);
-        for (SPlayer p : members) {
-            p.updatePermissions();
-        }
-    }
+    /*
+    =========================================
+           Permission Modification
+    =========================================
+     */
 
     public boolean isPermSet(String permission) {
         return perms.containsKey(permission.toLowerCase());
@@ -41,10 +46,27 @@ public class Group {
 
     public void unsetPerm(String permission) {
         perms.remove(permission.toLowerCase());
+        //Update Permissions of the members of this group
         for (SPlayer p : members) {
             p.updatePermissions();
         }
     }
+
+    public void setPermission(String permission, boolean value) {
+        perms.put(permission.toLowerCase(), value);
+        //Update Permissions of the members of this group
+        for (SPlayer p : members) {
+            p.updatePermissions();
+        }
+    }
+
+    /*
+    =========================================
+            Data Storage / loading
+    =========================================
+     */
+
+    //TODO: Support other saveTypes
 
     public void save() {
         switch (GroupManager.saveType) {
@@ -70,6 +92,7 @@ public class Group {
             perms.put(s.replace("|", "."), conf.getBoolean("permissions." + s));
         });
     }
+
 
 
     private void saveToYML() {
@@ -101,6 +124,13 @@ public class Group {
 
     }
 
+    /*
+    =========================================
+            Setters and Getters
+    =========================================
+     */
+
+
     public String getName() {
         return name;
     }
@@ -117,21 +147,37 @@ public class Group {
         members.remove(p);
     }
 
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
+    }
+
+    /*
+    =========================================
+    =========================================
+     */
+
     public static class GroupManager {
 
         private static Map<String, Group> groups = new HashMap<>();
         private static SaveType saveType;
 
+        //Used when plugin gets disabled
         public static void saveGroups() {
             for (Group g : groups.values()) {
                 g.save();
             }
         }
 
+        //TODO: Support other saveTypes
         public static void loadGroups() {
             switch (saveType) {
                 case YML:
                     File groupsFolder = new File(Main.getInstance().getDataFolder() + "/groups");
+                    //the default groups every new player gets set to
                     File defGroup = new File(groupsFolder, "default.yml");
                     if (!defGroup.exists()) {
                         try {
@@ -140,6 +186,7 @@ public class Group {
                             e.printStackTrace();
                         }
                     }
+
                     for (File file : groupsFolder.listFiles()) {
                         Group group = new Group(file.getName().split(".yml")[0]);
                         group.loadFromYML();
@@ -188,6 +235,7 @@ public class Group {
             GroupManager.saveType = saveType;
         }
 
+        //Checks if a group already exists
         public static boolean exists(String name) {
             for (Group group : groups.values()) {
                 if (group.getName().equalsIgnoreCase(name)) return true;

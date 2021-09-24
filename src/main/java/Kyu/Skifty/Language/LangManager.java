@@ -9,11 +9,15 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+This class handles loading the messages on startup
+and gives info about languages to the other classes
+ */
+
 public class LangManager {
 
     private static Map<String, Language> langs = new HashMap<>();
     private static Language defaultLang;
-    private static YamlConfiguration pLangConf;
 
     public static void setup(String defaultLang, Main plugin) {
 

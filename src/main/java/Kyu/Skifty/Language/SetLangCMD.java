@@ -1,12 +1,18 @@
 package Kyu.Skifty.Language;
 
 import Kyu.Skifty.Main;
+import Kyu.Skifty.Util.S;
 import Kyu.Skifty.Util.SPlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+/*
+The command players use to change their language
+and also for admins to reload the messages (//TODO)
+ */
 
 public class SetLangCMD implements CommandExecutor {
 
@@ -32,7 +38,7 @@ public class SetLangCMD implements CommandExecutor {
             return false;
         }
         sp.setLang(lang);
-        sp.sendPMessage("LanguageChanged", lang.getName());
+        sp.sendPMessage("LanguageChanged", new S("%lang", lang.getName()));
         return true;
     }
 }

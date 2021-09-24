@@ -1,5 +1,6 @@
 package Kyu.Skifty.Language;
 
+import Kyu.Skifty.Util.S;
 import Kyu.Skifty.Util.Util;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -7,11 +8,15 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+This class is initialized for every Language in the language folder
+ */
+
 public class Language {
 
-    private String name;
     private File file;
     private YamlConfiguration config;
+    private String name;
     private Map<String, String> messages = new HashMap<>();
 
     public Language(File file) {
@@ -21,6 +26,7 @@ public class Language {
         loadMessages();
     }
 
+    //Since the message yml files are structured with sections for better editable, two for loops are required to load messages
     public void loadMessages() {
         messages.clear();
         for (String section : config.getKeys(false)) {
@@ -38,10 +44,11 @@ public class Language {
         return name;
     }
 
-    public String getFMessage(String messageID, String[]... filler) {
+    //Returns an already formatted message
+    public String getFMessage(String messageID, S... filler) {
         String message = messages.get(messageID);
-        for (String[] s2 : filler) {
-            message = message.replaceFirst(s2[0], s2[1]);
+        for (S ls : filler) {
+            message = message.replace(ls.getS1(), ls.getS2());
         }
         return Util.color(message);
     }

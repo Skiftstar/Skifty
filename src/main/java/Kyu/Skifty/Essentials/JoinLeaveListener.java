@@ -8,6 +8,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+/*
+The default JoinLeave Listener of this plugin
+ */
+
 public class JoinLeaveListener implements Listener {
 
     public JoinLeaveListener(Main plugin) {
