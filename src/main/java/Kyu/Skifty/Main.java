@@ -30,6 +30,8 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new TestCommand(this);
+
         instance = this;
         //Default config is created this way so that comments are saved as well
         File defConf = new File(getDataFolder(), "config.yml");
@@ -102,6 +104,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         SPlayer.SPManager.savePlayerData();
+        SPlayer.SPManager.removeAttachments();
         Group.GroupManager.saveGroups();
     }
 

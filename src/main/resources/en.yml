@@ -13,6 +13,11 @@ SuccessMessages:
   GroupCreated: "&aSuccessfully created Group &b%group!"
   PermUnsetGroup: "&aPermission &b%perm &asuccessfully unset for group &b%group!"
   PermSetGroup: "&aPermission &b%perm &asuccessfully set to &b%val &afor group &b%group!"
+  UserGroupSet: "&aSuccessfully set &b%p's &agroup to &b%group!"
+  GroupSuffixSet: "&aSuccessfully set Suffix for group &b%group &ato %suff!"
+  GroupPrefixSet: "&aSuccessfully set Prefix for group &b%group &ato %pref!"
+  GroupPrefixRemoved: "&aSuccesfully removed prefix of group &b%group!"
+  GroupSuffixRemoved: "&aSuccessfully removed suffix of group &b%group!"
 
 PermissionsCommand:
   permGroupInfo: "&aPermissions for group &b%name:"

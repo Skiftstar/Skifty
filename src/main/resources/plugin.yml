@@ -10,3 +10,5 @@ commands:
   perm:
     aliases: [permissions, p]
     description: Access to all the permissions commands
+  test:
+    description: test

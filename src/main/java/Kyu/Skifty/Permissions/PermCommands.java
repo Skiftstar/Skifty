@@ -109,6 +109,7 @@ public class PermCommands implements CommandExecutor {
                 return;
             }
             sp.setGroup(group);
+            sender.sendMessage(lang.getFMessage("UserGroupSet", new S("%p", p.getName()), new S("%group", group.getName())));
             return;
         }
 
@@ -151,8 +152,14 @@ public class PermCommands implements CommandExecutor {
     private void handleGroupPrefixSuffixCommand(String[] args, Language lang, CommandSender sender, Group group, String type) {
         //command looks like this: "/perm group NAME prefix/suffix unset"
         if (args[0].equalsIgnoreCase("unset")) {
-            if (type.equalsIgnoreCase("prefix")) group.setPrefix(null);
-            else group.setSuffix(null);
+            if (type.equalsIgnoreCase("prefix")) {
+                group.setPrefix(null);
+                sender.sendMessage(lang.getFMessage("GroupPrefixRemoved", new S("%group", group.getName())));
+            }
+            else {
+                group.setSuffix(null);
+                sender.sendMessage(lang.getFMessage("GroupSuffixRemoved", new S("%group", group.getName())));
+            }
             return;
         }
 
@@ -160,10 +167,17 @@ public class PermCommands implements CommandExecutor {
         if (args[0].equalsIgnoreCase("set")) {
             StringBuilder string = new StringBuilder(args[1]);
             for (int i = 2; i < args.length; i++) {
+                string.append(" ");
                 string.append(args[i]);
             }
-            if (type.equalsIgnoreCase("prefix")) group.setPrefix(Util.color(string.toString()));
-            else group.setSuffix(Util.color(string.toString()));
+            if (type.equalsIgnoreCase("prefix")) {
+                group.setPrefix(Util.color(string.toString()));
+                sender.sendMessage(lang.getFMessage("GroupPrefixSet", new S("%group", group.getName()), new S("%pref", Util.color(string.toString()))));
+            }
+            else {
+                group.setSuffix(Util.color(string.toString()));
+                sender.sendMessage(lang.getFMessage("GroupSuffixSet", new S("%group", group.getName()), new S("%suff", Util.color(string.toString()))));
+            }
             return;
         }
 

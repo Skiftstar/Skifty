@@ -34,7 +34,7 @@ public class SPlayer {
     public SPlayer(Player p) {
         this.p = p;
         checkForConf();
-        setup();
+        loadFromYML();
         if (Main.getInstance().permsEnabled) {
             permSetup();
         }
@@ -57,7 +57,8 @@ public class SPlayer {
 
     //loads in the player language from his config
     //if no language is set, it is set to the default lang
-    private void setup() {
+    //TODO: Support other saveTypes
+    private void loadFromYML() {
         if (conf.get("language") != null) {
             lang = LangManager.getLanguage(conf.getString("language"));
         } else if (lang == null || conf.get("language") == null){
@@ -86,6 +87,9 @@ public class SPlayer {
     //TODO: Support other saveTypes such as MySQL and SQLite
     public void save() {
         conf.set("language", lang.getName());
+        if (group != null) {
+            conf.set("group", group.getName());
+        }
         try {
             conf.save(file);
         } catch (IOException e) {
@@ -111,10 +115,12 @@ public class SPlayer {
         //Player perms are loaded in after group perms
         //Because player perms are supposed to override any group perms
         loadGroupPerms();
-        conf.getConfigurationSection("permissions").getKeys(false).forEach(s -> {
-            perms.put(s.replace("|", "."), conf.getBoolean("permissions." + s));
-            permAttachment.setPermission(s.replace("|", "."), perms.get(s.replace("|", ".")));
-        });
+        if (conf.get("perimssions") != null) {
+            conf.getConfigurationSection("permissions").getKeys(false).forEach(s -> {
+                perms.put(s.replace("|", "."), conf.getBoolean("permissions." + s));
+                permAttachment.setPermission(s.replace("|", "."), perms.get(s.replace("|", ".")));
+            });
+        }
     }
 
     public void setPermissions(String perm, boolean val) {
@@ -145,6 +151,10 @@ public class SPlayer {
         for (String s : perms.keySet()) {
             permAttachment.setPermission(s, perms.get(s));
         }
+    }
+
+    public void removePermAttach() {
+        p.removeAttachment(permAttachment);
     }
 
     /*
@@ -196,6 +206,7 @@ public class SPlayer {
             if (sp.getGroup() != null) {
                 //Player is removed from group because offline players are not needed in the group memberlist
                 sp.getGroup().removeMember(sp);
+                sp.removePermAttach();
             }
             players.remove(p);
         }
@@ -203,6 +214,14 @@ public class SPlayer {
         public static void savePlayerData() {
             for (SPlayer p : players.values()) {
                 p.save();
+            }
+        }
+
+        public static void removeAttachments() {
+            if (Main.getInstance().permsEnabled) {
+                for (SPlayer p : players.values()) {
+                    p.removePermAttach();
+                }
             }
         }
 

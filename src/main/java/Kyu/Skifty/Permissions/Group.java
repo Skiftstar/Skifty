@@ -98,12 +98,8 @@ public class Group {
     private void saveToYML() {
         File file = new File(Main.getInstance().getDataFolder() + "/groups", name + ".yml");
         YamlConfiguration conf = YamlConfiguration.loadConfiguration(file);
-        if (prefix != null) {
-            conf.set("prefix", prefix);
-        }
-        if (suffix != null) {
-            conf.set("suffix", suffix);
-        }
+        conf.set("prefix", prefix);
+        conf.set("suffix", suffix);
         conf.set("weight", weight);
         conf.set("permissions", null);
         for (String perm : perms.keySet()) {
