@@ -130,9 +130,23 @@ public class PermCommands implements CommandExecutor, TabCompleter {
         }
         Group group = Group.GroupManager.getGroup(groupName);
 
+        //commands looks like this: "/perm group NAME setweight"
+        if (args[1].equalsIgnoreCase("setWeight")) {
+            if (args.length < 3) {
+                int weight;
+                try {
+                    weight = Integer.parseInt(args[2]);
+                } catch (NumberFormatException e) {
+                    sender.sendMessage(lang.getFMessage("NotANumber", new S("%val", args[2])));
+                    return;
+                }
+                group.setWeight(weight);
+            }
+        }
+
         //command looks like this: "/perm group NAME perm"
         if (args[1].equalsIgnoreCase("perm")) {
-            if (args.length < 3) {
+            if (args.length < 4) {
                 sender.sendMessage(lang.getFMessage("NotEnoughArgs"));
                 return;
             }
@@ -142,7 +156,7 @@ public class PermCommands implements CommandExecutor, TabCompleter {
 
         //command looks like this: "/perm group NAME prefix/suffix"
         if (args[1].equalsIgnoreCase("prefix") || args[2].equalsIgnoreCase("suffix")) {
-            if (args.length < 3) {
+            if (args.length < 4) {
                 sender.sendMessage(lang.getFMessage("NotEnoughArgs"));
                 return;
             }

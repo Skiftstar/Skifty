@@ -7,6 +7,7 @@ ErrorMessages:
   PermNotSet: "&cThis permission is not set for this group!"
   PermAlreadySet: "&cThis permissions is already set for this group!"
   PlayerNotOnline: "&cThis player isn't online!"
+  NotANumber: "&cThe following value must be a number: &4%val!"
 
 SuccessMessages:
   LanguageChanged: "&aSuccessfully changed language to &b%lan!"
