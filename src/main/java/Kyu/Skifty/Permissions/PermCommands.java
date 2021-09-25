@@ -258,30 +258,40 @@ public class PermCommands implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (args.length == 1) {
-            return contextMenu.get("");
+            return startsWith(args[0], contextMenu.get(""));
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("group")) {
-            return Group.GroupManager.getGroupNames();
+            return startsWith(args[1], Group.GroupManager.getGroupNames());
         }
         if (args.length == 3 && args[0].equalsIgnoreCase("group")) {
-            return contextMenu.get("group");
+            return startsWith(args[2], contextMenu.get("group"));
         }
         if (args.length == 4 && args[0].equalsIgnoreCase("group") && (args[2].equalsIgnoreCase("prefix") || args[2].equalsIgnoreCase("suffix"))) {
-            return contextMenu.get("prefix");
+            return startsWith(args[3], contextMenu.get("prefix"));
         }
-        if (args.length == 4 && args[0].equalsIgnoreCase("group") && args[2].equalsIgnoreCase("perm"))) {
-            return contextMenu.get("perm");
+        if (args.length == 4 && args[0].equalsIgnoreCase("group") && args[2].equalsIgnoreCase("perm")) {
+            return startsWith(args[3], contextMenu.get("perm"));
         }
         if (args.length == 2) {
-            return SPlayer.SPManager.getPlayerNames();
+            return null;
         }
         if (args.length == 3 && args[0].equalsIgnoreCase("user")) {
-            contextMenu.get("user");
+            return startsWith(args[2], contextMenu.get("user"));
         }
         if (args.length == 4 && args[0].equalsIgnoreCase("user") && args[2].equalsIgnoreCase("group")) {
-            return Group.GroupManager.getGroupNames();
+            return startsWith(args[3], Group.GroupManager.getGroupNames());
         }
         return new ArrayList<>();
+    }
+
+    private List<String> startsWith(String argument, List<String> options) {
+        List<String> newList = new ArrayList<>();
+        for (String s : options) {
+            if (s.toLowerCase().startsWith(argument.toLowerCase())) {
+                newList.add(s);
+            }
+        }
+        return newList;
     }
 
     private void fillContextMenu() {

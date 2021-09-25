@@ -5,7 +5,7 @@ import Kyu.Skifty.Permissions.Group;
 import Kyu.Skifty.Util.SPlayer;
 import Kyu.Skifty.Util.Util;
 import io.papermc.paper.event.player.AsyncChatEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,17 +25,18 @@ public class ChatListener implements Listener {
         e.setCancelled(true);
         Player p = e.getPlayer();
         SPlayer sp = SPlayer.SPManager.getPlayer(p);
-        String mess = e.message().toString();
+        TextComponent comp = (TextComponent) e.message();
+        String mess = comp.content();
         String newMess = format;
         if (Main.getInstance().permsEnabled) {
             Group group = sp.getGroup();
             newMess = newMess.replace("%prefix", group.getPrefix());
             newMess = newMess.replace("%suffix", group.getSuffix());
         }
-        newMess = newMess.replace("%disp", p.displayName().toString());
+        newMess = newMess.replace("%disp", ((TextComponent) p.displayName()).content());
         newMess = newMess.replace("%name", p.getName());
         newMess = newMess.replace("%mess", mess);
-        Bukkit.broadcast(new TextComponent(Util.color(newMess)));
+        Bukkit.broadcastMessage(Util.color(newMess));
     }
 
 }
