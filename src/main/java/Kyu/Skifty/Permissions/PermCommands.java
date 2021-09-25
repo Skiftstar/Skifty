@@ -10,21 +10,26 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 /*
 This class handles all the commands that have to do with the permissions system
  */
 
-public class PermCommands implements CommandExecutor {
+public class PermCommands implements CommandExecutor, TabCompleter {
+
+    private Map<String, List<String>> contextMenu = new HashMap<>();
 
     public PermCommands(Main plugin) {
         plugin.getCommand("perm").setExecutor(this);
+        fillContextMenu();
     }
+
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -151,7 +156,7 @@ public class PermCommands implements CommandExecutor {
     //handles the modification of a groups suffix or prefix
     private void handleGroupPrefixSuffixCommand(String[] args, Language lang, CommandSender sender, Group group, String type) {
         //command looks like this: "/perm group NAME prefix/suffix unset"
-        if (args[0].equalsIgnoreCase("unset")) {
+        if (args[0].equalsIgnoreCase("remove")) {
             if (type.equalsIgnoreCase("prefix")) {
                 group.setPrefix(null);
                 sender.sendMessage(lang.getFMessage("GroupPrefixRemoved", new S("%group", group.getName())));
@@ -247,5 +252,50 @@ public class PermCommands implements CommandExecutor {
             header.append(lang.getFMessage("permListTemplate", new S("%perm", s), new S("%val", ""+perms.get(s))));
         }
         return header.toString();
+    }
+
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        if (args.length == 1) {
+            return contextMenu.get("");
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("group")) {
+            return Group.GroupManager.getGroupNames();
+        }
+        if (args.length == 3 && args[0].equalsIgnoreCase("group")) {
+            return contextMenu.get("group");
+        }
+        if (args.length == 4 && args[0].equalsIgnoreCase("group") && (args[2].equalsIgnoreCase("prefix") || args[2].equalsIgnoreCase("suffix"))) {
+            return contextMenu.get("prefix");
+        }
+        if (args.length == 4 && args[0].equalsIgnoreCase("group") && args[2].equalsIgnoreCase("perm"))) {
+            return contextMenu.get("perm");
+        }
+        if (args.length == 2) {
+            return SPlayer.SPManager.getPlayerNames();
+        }
+        if (args.length == 3 && args[0].equalsIgnoreCase("user")) {
+            contextMenu.get("user");
+        }
+        if (args.length == 4 && args[0].equalsIgnoreCase("user") && args[2].equalsIgnoreCase("group")) {
+            return Group.GroupManager.getGroupNames();
+        }
+        return new ArrayList<>();
+    }
+
+    private void fillContextMenu() {
+        List<String> defComms = new ArrayList<>(Arrays.asList("createGroup", "user", "group", "help"));
+        contextMenu.put("", defComms);
+        List<String> userComms = new ArrayList<>(Arrays.asList("group", "perm"));
+        contextMenu.put("user", userComms);
+        List<String> groupComms = new ArrayList<>(Arrays.asList("prefix", "perm", "setWeight"));
+        contextMenu.put("group", groupComms);
+        List<String> permComms = new ArrayList<>(Arrays.asList("set", "unset", "info"));
+        contextMenu.put("perm", permComms);
+        List<String> prefixComms = new ArrayList<>(Arrays.asList("set", "remove"));
+        contextMenu.put("prefix", prefixComms);
+        List<String> parentComms = new ArrayList<>(Arrays.asList("set", "add", "remove", "info"));
+        contextMenu.put("userGroup", parentComms);
     }
 }

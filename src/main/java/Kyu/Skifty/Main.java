@@ -1,5 +1,6 @@
 package Kyu.Skifty;
 
+import Kyu.Skifty.ChatFormatting.ChatListener;
 import Kyu.Skifty.Essentials.JoinLeaveListener;
 import Kyu.Skifty.Language.LangManager;
 import Kyu.Skifty.Language.SetLangCMD;
@@ -47,8 +48,16 @@ public final class Main extends JavaPlugin {
         setupPermissions();
         setupLang();
         setupEssentials();
+        setupChatFormatting();
         //Incase plugin gets reloaded
         SPlayer.SPManager.reloadPlayers();
+    }
+
+    private void setupChatFormatting() {
+        if (!getConfig().getBoolean("ChatFormatting.enabled")) {
+            return;
+        }
+        new ChatListener(this);
     }
 
     private void setupPermissions() {

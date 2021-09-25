@@ -151,6 +151,14 @@ public class Group {
         this.suffix = suffix;
     }
 
+    public String getPrefix() {
+        return prefix == null ? "" : prefix;
+    }
+
+    public String getSuffix() {
+        return suffix == null ? "" : suffix;
+    }
+
     /*
     =========================================
     =========================================
@@ -237,6 +245,10 @@ public class Group {
                 if (group.getName().equalsIgnoreCase(name)) return true;
             }
             return false;
+        }
+
+        public static List<String> getGroupNames() {
+            return new ArrayList<>(groups.keySet());
         }
     }
 }

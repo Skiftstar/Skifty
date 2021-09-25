@@ -11,7 +11,9 @@ import org.bukkit.permissions.PermissionAttachment;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SPlayer {
@@ -223,6 +225,10 @@ public class SPlayer {
                     p.removePermAttach();
                 }
             }
+        }
+
+        public static List<String> getPlayerNames() {
+            return new ArrayList<>();
         }
 
         public static SPlayer getPlayer(Player p) {

@@ -1,3 +1,13 @@
+ChatFormatting:
+  enabled: true
+  #Possible placeholders
+  # %prefix - Prefix of the group the player is in (requires permission module)
+  # %suffix - Suffix of the group te player is in (requires permission module)
+  # %disp - DisplayName of the player (for example their nickname)
+  # %name - Actual name of the player (ignores nickname from /nick commands)
+  # %mess - the message the player sent
+  format: "&8[%prefix] %disp &8[%suffix] &7>> &8%mess"
+
 Permissions:
   enabled: true
   #How the Group and user data is stored
