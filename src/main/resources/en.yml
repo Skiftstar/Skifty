@@ -8,6 +8,8 @@ ErrorMessages:
   PermAlreadySet: "&cThis permissions is already set for this group!"
   PlayerNotOnline: "&cThis player isn't online!"
   NotANumber: "&cThe following value must be a number: &4%val!"
+  AlreadySetAsParent: "&cGroup &4%group1 &cis already a parent of group &4%group2!"
+  NotSetAsParent: "&cGroup &4%group1 &cis not a parent of group &4%group2!"
 
 SuccessMessages:
   LanguageChanged: "&aSuccessfully changed language to &b%lan!"
@@ -17,9 +19,14 @@ SuccessMessages:
   UserGroupSet: "&aSuccessfully set &b%p's &agroup to &b%group!"
   GroupSuffixSet: "&aSuccessfully set Suffix for group &b%group &ato %suff!"
   GroupPrefixSet: "&aSuccessfully set Prefix for group &b%group &ato %pref!"
-  GroupPrefixRemoved: "&aSuccesfully removed prefix of group &b%group!"
+  GroupPrefixRemoved: "&aSuccessfully removed prefix of group &b%group!"
   GroupSuffixRemoved: "&aSuccessfully removed suffix of group &b%group!"
+  GroupParentsCleared: "&aSuccessfully cleared Parents of group &b%group!"
+  GroupParentAdded: "&aSuccessfully added group &b%group1 &aas parent of group &b%group2!"
+  GroupParentRemoved: "&aSuccessfully removed group &b%group1 &aas parent of group &b%group2!"
 
 PermissionsCommand:
   permGroupInfo: "&aPermissions for group &b%name:"
   permListTemplate: "&a- %perm: %val"
+  GroupParentInfo: "&aParents of group &b%group:"
+  GroupParentInfoLine: "&a- %group"

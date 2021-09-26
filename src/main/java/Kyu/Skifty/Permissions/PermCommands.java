@@ -154,6 +154,16 @@ public class PermCommands implements CommandExecutor, TabCompleter {
             return;
         }
 
+        //command looks like this: "/perm group NAME parent"
+        if (args[1].equalsIgnoreCase("parent")) {
+            if (args.length < 3) {
+                sender.sendMessage(lang.getFMessage("NotEnoughArgs"));
+                return;
+            }
+            handleGroupParentCommand(Arrays.copyOfRange(args, 2, args.length), lang, sender, group);
+            return;
+        }
+
         //command looks like this: "/perm group NAME prefix/suffix"
         if (args[1].equalsIgnoreCase("prefix") || args[2].equalsIgnoreCase("suffix")) {
             if (args.length < 4) {
@@ -165,6 +175,51 @@ public class PermCommands implements CommandExecutor, TabCompleter {
         }
 
         sender.sendMessage(lang.getFMessage("NotAValidValue", new S("%val", args[0])));
+    }
+
+    private void handleGroupParentCommand(String[] args, Language lang, CommandSender sender, Group group) {
+        if (args[0].equalsIgnoreCase("clear")) {
+            group.clearParents();
+            sender.sendMessage(lang.getFMessage("GroupParentsCleared", new S("%group", group.getName())));
+            return;
+        }
+        if (args[0].equalsIgnoreCase("info")) {
+            StringBuilder mess = new StringBuilder(lang.getFMessage("GroupParentInfo", new S("%group", group.getName())));
+            for (Group g : group.getParens()) {
+                mess.append("\n");
+                mess.append(lang.getFMessage("GroupParentInfoLine", new S("%group", g.getName())));
+            }
+            sender.sendMessage(mess.toString());
+            return;
+        }
+        if (args.length < 2) {
+            sender.sendMessage(lang.getFMessage("NotEnoughArgs"));
+            return;
+        }
+        Group g = Group.GroupManager.getGroup(args[1]);
+        if (g == null) {
+            sender.sendMessage(lang.getFMessage("NoSuchGroup"));
+            return;
+        }
+        if (args[0].equalsIgnoreCase("add")) {
+            if (group.getParens().contains(g)) {
+                sender.sendMessage(lang.getFMessage("AlreadySetAsParent", new S("%group1", g.getName()), new S("%group2", group.getName())));
+                return;
+            }
+            group.addParent(g);
+            sender.sendMessage(lang.getFMessage("GroupParentAdded", new S("%group1", g.getName()), new S("%group2", group.getName())));
+            return;
+        }
+        if (args[0].equalsIgnoreCase("remove")) {
+            if (!group.getParens().contains(g)) {
+                sender.sendMessage(lang.getFMessage("NotSetAsParent", new S("%group1", g.getName()), new S("%group2", group.getName())));
+                return;
+            }
+            group.removeParent(g);
+            sender.sendMessage(lang.getFMessage("GroupParentRemoved", new S("%group1", g.getName()), new S("%group2", group.getName())));
+            return;
+        }
+
     }
 
     //handles the modification of a groups suffix or prefix
@@ -286,6 +341,12 @@ public class PermCommands implements CommandExecutor, TabCompleter {
         if (args.length == 4 && args[0].equalsIgnoreCase("group") && args[2].equalsIgnoreCase("perm")) {
             return startsWith(args[3], contextMenu.get("perm"));
         }
+        if (args.length == 4 && args[0].equalsIgnoreCase("group") && args[2].equalsIgnoreCase("parent")) {
+            return startsWith(args[3], contextMenu.get("parent"));
+        }
+        if (args.length == 5 && args[0].equalsIgnoreCase("group") && args[2].equalsIgnoreCase("parent") && (args[3].equalsIgnoreCase("set") || args[3].equalsIgnoreCase("remove"))) {
+            return startsWith(args[4], remove(Group.GroupManager.getGroupNames(), args[1]));
+        }
         if (args.length == 2) {
             return null;
         }
@@ -296,6 +357,11 @@ public class PermCommands implements CommandExecutor, TabCompleter {
             return startsWith(args[3], Group.GroupManager.getGroupNames());
         }
         return new ArrayList<>();
+    }
+
+    private List<String> remove(List<String> list, String toRemove) {
+        list.remove(toRemove);
+        return list;
     }
 
     private List<String> startsWith(String argument, List<String> options) {
@@ -313,13 +379,15 @@ public class PermCommands implements CommandExecutor, TabCompleter {
         contextMenu.put("", defComms);
         List<String> userComms = new ArrayList<>(Arrays.asList("group", "perm"));
         contextMenu.put("user", userComms);
-        List<String> groupComms = new ArrayList<>(Arrays.asList("prefix", "perm", "setWeight"));
+        List<String> groupComms = new ArrayList<>(Arrays.asList("prefix", "perm", "setWeight", "parent"));
         contextMenu.put("group", groupComms);
+        List<String> parentComms = new ArrayList<>(Arrays.asList("clear", "info", "add", "remove"));
+        contextMenu.put("parent", parentComms);
         List<String> permComms = new ArrayList<>(Arrays.asList("set", "unset", "info"));
         contextMenu.put("perm", permComms);
         List<String> prefixComms = new ArrayList<>(Arrays.asList("set", "remove"));
         contextMenu.put("prefix", prefixComms);
-        List<String> parentComms = new ArrayList<>(Arrays.asList("set", "add", "remove", "info"));
-        contextMenu.put("userGroup", parentComms);
+        List<String> userParentComms = new ArrayList<>(Arrays.asList("set", "add", "remove", "info"));
+        contextMenu.put("userGroup", userParentComms);
     }
 }

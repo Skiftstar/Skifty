@@ -11,10 +11,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.awt.peer.ScrollPanePeer;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*
 Class handles the Groups of the permission System
@@ -58,6 +55,36 @@ public class Group {
         for (SPlayer p : members) {
             p.updatePermissions();
         }
+    }
+
+    /*
+    =========================================
+           Parent Modification
+    =========================================
+     */
+
+    public void clearParents() {
+        parents.clear();
+    }
+
+    public void addParent(Group group) {
+        parents.add(group);
+        sortParentList();
+    }
+
+    public void removeParent(Group group) {
+        parents.remove(group);
+        sortParentList();
+    }
+
+    private void sortParentList() {
+        //Sorting the list by weight
+        Collections.sort(parents, new Comparator<Group>() {
+            @Override
+            public int compare(Group o1, Group o2) {
+                return Integer.compare(o1.getWeight(), o2.getWeight());
+            }
+        });
     }
 
     /*
@@ -133,6 +160,10 @@ public class Group {
 
     public Map<String, Boolean> getPerms() {
         return perms;
+    }
+
+    public List<Group> getParens() {
+        return parents;
     }
 
     public void addMember(SPlayer p) {

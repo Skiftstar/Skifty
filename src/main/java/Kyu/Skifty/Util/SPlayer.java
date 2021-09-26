@@ -140,9 +140,17 @@ public class SPlayer {
 
     //Loads in the permissions from the group the player is in
     private void loadGroupPerms() {
-        Map<String, Boolean> perms = group.getPerms();
-        for (String s : perms.keySet()) {
-            permAttachment.setPermission(s, perms.get(s));
+        //Gets the parents of the group sorted by weight
+        //Highest weight at the end of the list
+        //The parents with higher weight override the perms from the parents with lower weight
+        List<Group> toLoad = group.getParens();
+        //add the main group at the end of the list as it should be able to override all permissions from the parents
+        toLoad.add(group);
+        for (Group g : toLoad) {
+            Map<String, Boolean> perms = g.getPerms();
+            for (String s : perms.keySet()) {
+                permAttachment.setPermission(s, perms.get(s));
+            }
         }
     }
 
