@@ -24,9 +24,13 @@ SuccessMessages:
   GroupParentsCleared: "&aSuccessfully cleared Parents of group &b%group!"
   GroupParentAdded: "&aSuccessfully added group &b%group1 &aas parent of group &b%group2!"
   GroupParentRemoved: "&aSuccessfully removed group &b%group1 &aas parent of group &b%group2!"
+  PermUnsetUser: "&aPermission &b%perm &asuccessfully unset for user &b%name!"
+  PermSetUser: "&aPermission &b%perm &asuccessfully set to &b%val &afor user &b%name!"
+
 
 PermissionsCommand:
   permGroupInfo: "&aPermissions for group &b%name:"
+  UserPermInfo: "&aPermissions for user &b%name:"
   permListTemplate: "&a- %perm: %val"
   GroupParentInfo: "&aParents of group &b%group:"
   GroupParentInfoLine: "&a- %group"

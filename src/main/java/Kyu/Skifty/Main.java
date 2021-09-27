@@ -5,7 +5,7 @@ import Kyu.Skifty.Essentials.JoinLeaveListener;
 import Kyu.Skifty.Language.LangManager;
 import Kyu.Skifty.Language.SetLangCMD;
 import Kyu.Skifty.Permissions.Group;
-import Kyu.Skifty.Permissions.PermCommands;
+import Kyu.Skifty.Permissions.PermCommands.PermCommandHandler;
 import Kyu.Skifty.Util.SPlayer;
 import Kyu.Skifty.Util.SaveType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -80,7 +80,7 @@ public final class Main extends JavaPlugin {
         }
         Group.GroupManager.setSaveType(saveType);
         Group.GroupManager.loadGroups();
-        new PermCommands(this);
+        new PermCommandHandler(this);
     }
 
     //Creates the folder where all the player yml files are located

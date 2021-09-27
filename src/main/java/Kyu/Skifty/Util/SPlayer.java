@@ -11,10 +11,7 @@ import org.bukkit.permissions.PermissionAttachment;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SPlayer {
 
@@ -167,6 +164,20 @@ public class SPlayer {
         p.removeAttachment(permAttachment);
     }
 
+    public boolean isPermSet(String perm) {
+        return perms.containsKey(perm.toLowerCase());
+    }
+
+    public void unsetPerm(String permission) {
+        perms.remove(permission.toLowerCase());
+        updatePermissions();
+    }
+
+    public void setPermission(String permission, boolean value) {
+        perms.put(permission.toLowerCase(), value);
+        updatePermissions();
+    }
+
     /*
     =========================================
             Setters and Getters
@@ -192,6 +203,14 @@ public class SPlayer {
 
     public Group getGroup() {
         return group;
+    }
+
+    public Map<String, Boolean> getPerms() {
+        return perms;
+    }
+
+    public Player getP() {
+        return p;
     }
 
     /*
